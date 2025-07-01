@@ -1,0 +1,40 @@
+<h2>Registro de Huésped</h2>
+<form (ngSubmit)="registrarse()" [formGroup]="registroForm">
+  <div>
+    <label>Nombre:</label>
+    <input formControlName="nombre" required />
+  </div>
+  <div>
+    <label>Apellido:</label>
+    <input formControlName="apellido" required />
+  </div>
+  <div>
+    <label>Correo:</label>
+    <input formControlName="correo" required type="email" />
+  </div>
+  <div>
+    <label>Dirección:</label>
+    <input formControlName="direccion" required />
+  </div>
+  <div>
+    <label>Fecha de Nacimiento:</label>
+    <input formControlName="fechaNacimiento" required type="date" />
+  </div>
+  <div>
+    <label>Documento:</label>
+    <input formControlName="numeroDocumento" required maxlength="8" />
+  </div>
+  <div>
+    <label>Teléfono:</label>
+    <input formControlName="telefono" required />
+  </div>
+  <div>
+    <label>Username:</label>
+    <input formControlName="username" required />
+  </div>
+  <div>
+    <label>Contraseña:</label>
+    <input type="password" formControlName="password" required />
+  </div>
+  <button type="submit" [disabled]="registroForm.invalid">Registrarse</button>
+</form>
