@@ -1,0 +1,72 @@
+<h2 class="mb-3">Listado de Bancos Disponibles</h2>
+<div class="d-flex justify-content-end mb-3">
+  <button class="btn btn-primary" (click)="abrirModal()">Registrar Banco</button>
+</div>
+
+<table class="table table-bordered table-hover">
+  <thead class="table-light">
+    <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let banco of listaBancos; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ banco.nombre }}</td>
+      <td>{{ banco.estado }}</td>
+      <td>
+        <button class="btn btn-sm btn-success" (click)="abrirModal(banco.id)">Editar</button>
+        <button class="btn btn-sm btn-danger" (click)="eliminar(banco.id)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<!-- Modal único -->
+<div class="modal fade" id="modalBanco" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form [formGroup]="formBanco">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ encabezado }}</h5>
+          <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <div class="form-floating">
+              <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre">
+              <label>Nombre</label>
+            </div>
+          </div>
+
+<!-- Solo mostrar campo estado al editar -->
+<div class="mb-3" *ngIf="id !== null">
+  <div class="form-floating">
+    <select class="form-select" formControlName="estado">
+      <option value="Activo">Activo</option>
+      <option value="Inactivo">Inactivo</option>
+    </select>
+    <label>Estado</label>
+  </div>
+</div>
+
+
+        </div>
+        <div class="modal-footer">
+<!-- Botón registrar -->
+<button *ngIf="id === null" type="button" class="btn btn-primary" (click)="registrar()" [disabled]="formBanco.invalid">
+  Registrar
+</button>
+
+<button *ngIf="id !== null" type="button" class="btn btn-success"
+        (click)="alertaActualizar()" [disabled]="formBanco.invalid">
+  Actualizar
+</button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
