@@ -6,38 +6,16 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private auth: AuthService) {}
 
-  // token.interceptor.ts
-intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-  const token = this.authService.getToken();
-
-  const publicPaths = [
-    '/login',
-    '/api/huespedes',
-    '/api/huespedes/',
-    '/api/precioHabitacion',
-    '/api/precioHabitacion/',
-    '/api/planes',
-    '/api/planes/',
-    '/api/tipoHabitacion',
-    '/api/tipoHabitacion/',
-    // Rutas para testear
-    '/api/itemConsumo',
-    '/api/empleados'
-  ];
-
-  const isPublic = publicPaths.some(path => req.url.includes(path));
-
-  if (token && !isPublic) {
-    const cloned = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`)
-    });
-    return next.handle(cloned);
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.auth.getToken();
+    if (token) {
+      const authReq = req.clone({
+        setHeaders: { Authorization: `Bearer ${token}` }
+      });
+      return next.handle(authReq);
+    }
+    return next.handle(req);
   }
-
-  return next.handle(req);
-}
-
-
 }
