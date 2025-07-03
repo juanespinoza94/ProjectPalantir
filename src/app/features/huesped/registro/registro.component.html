@@ -1,40 +1,94 @@
-<h2>Registro de Huésped</h2>
-<form (ngSubmit)="registrarse()" [formGroup]="registroForm">
-  <div>
-    <label>Nombre:</label>
-    <input formControlName="nombre" required />
-  </div>
-  <div>
-    <label>Apellido:</label>
-    <input formControlName="apellido" required />
-  </div>
-  <div>
-    <label>Correo:</label>
-    <input formControlName="correo" required type="email" />
-  </div>
-  <div>
-    <label>Dirección:</label>
-    <input formControlName="direccion" required />
-  </div>
-  <div>
-    <label>Fecha de Nacimiento:</label>
-    <input formControlName="fechaNacimiento" required type="date" />
-  </div>
-  <div>
-    <label>Documento:</label>
-    <input formControlName="numeroDocumento" required maxlength="8" />
-  </div>
-  <div>
-    <label>Teléfono:</label>
-    <input formControlName="telefono" required />
-  </div>
-  <div>
-    <label>Username:</label>
-    <input formControlName="username" required />
-  </div>
-  <div>
-    <label>Contraseña:</label>
-    <input type="password" formControlName="password" required />
-  </div>
-  <button type="submit" [disabled]="registroForm.invalid">Registrarse</button>
-</form>
+<div class="min-h-screen flex items-center justify-center pt-12 pb-12" style="background-color: #f0ead6;">
+<div class="max-w-xl mx-auto p-6 bg-white rounded-2xl shadow-md">
+  <h2 class="text-2xl font-bold mb-4 text-center">Registro</h2>
+
+  <form [formGroup]="registroForm" (ngSubmit)="registrarse()" class="grid grid-cols-1 gap-4">
+    <!-- Nombre -->
+    <div>
+      <label class="block font-semibold">Nombre</label>
+      <input type="text" formControlName="nombre" class="input" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+      <p *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" class="text-red-500 text-sm">
+        El nombre es requerido y solo debe contener letras.
+      </p>
+    </div>
+
+    <!-- Apellido -->
+    <div>
+      <label class="block font-semibold">Apellido</label>
+      <input type="text" formControlName="apellido" class="input" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+      <p *ngIf="registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched" class="text-red-500 text-sm">
+        El apellido es requerido y solo debe contener letras.
+      </p>
+    </div>
+
+    <!-- Correo -->
+    <div>
+      <label class="block font-semibold">Correo</label>
+      <input type="email" formControlName="email" class="input" />
+      <p *ngIf="registroForm.get('email')?.invalid && registroForm.get('email')?.touched" class="text-red-500 text-sm">
+        Debe ingresar un correo válido.
+      </p>
+    </div>
+
+    <!-- Dirección -->
+    <div>
+      <label class="block font-semibold">Dirección</label>
+      <input type="text" formControlName="direccion" class="input" />
+      <p *ngIf="registroForm.get('direccion')?.invalid && registroForm.get('direccion')?.touched" class="text-red-500 text-sm">
+        La dirección es requerida.
+      </p>
+    </div>
+
+    <!-- Fecha de Nacimiento -->
+    <div>
+      <label class="block font-semibold">Fecha de Nacimiento</label>
+      <input type="date" formControlName="fechaNacimiento" class="input" />
+      <p *ngIf="registroForm.get('fechaNacimiento')?.invalid && registroForm.get('fechaNacimiento')?.touched" class="text-red-500 text-sm">
+        Debe tener al menos 18 años y no puede ser una fecha futura.
+      </p>
+    </div>
+
+    <!-- Documento -->
+    <div>
+      <label class="block font-semibold">Documento</label>
+      <input type="text" formControlName="numeroDocumento" maxlength="8" class="input" pattern="^[0-9]+$" />
+      <p *ngIf="registroForm.get('numeroDocumento')?.invalid && registroForm.get('numeroDocumento')?.touched" class="text-red-500 text-sm">
+        Solo se permiten números (máx. 8 dígitos).
+      </p>
+    </div>
+
+    <!-- Teléfono -->
+    <div>
+      <label class="block font-semibold">Teléfono</label>
+      <input type="text" formControlName="telefono" maxlength="9" class="input" pattern="^[0-9]+$" />
+      <p *ngIf="registroForm.get('telefono')?.invalid && registroForm.get('telefono')?.touched" class="text-red-500 text-sm">
+        Solo se permiten números (máx. 9 dígitos).
+      </p>
+    </div>
+
+    <!-- Username -->
+    <div>
+      <label class="block font-semibold">Username</label>
+      <input type="text" formControlName="username" class="input" />
+      <p *ngIf="registroForm.get('username')?.invalid && registroForm.get('username')?.touched" class="text-red-500 text-sm">
+        Campo obligatorio.
+      </p>
+    </div>
+
+    <!-- Contraseña -->
+    <div>
+      <label class="block font-semibold">Contraseña</label>
+      <input type="password" formControlName="password" class="input" />
+      <p *ngIf="registroForm.get('password')?.invalid && registroForm.get('password')?.touched" class="text-red-500 text-sm">
+        Campo obligatorio.
+      </p>
+    </div>
+
+    <!-- Botón -->
+    <button type="submit" [disabled]="registroForm.invalid"
+      class="bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">
+      Registrarse
+    </button>
+  </form>
+</div>
+</div>

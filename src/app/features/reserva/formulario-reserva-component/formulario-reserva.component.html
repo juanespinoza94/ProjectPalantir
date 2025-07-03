@@ -1,0 +1,67 @@
+<div style="background-color: #f0ead6;" class="pt-12 pb-12">
+<h2 class="text-3xl font-bold mb-6 text-center text-gray-800 " > Creando tu Reserva</h2>
+
+<form [formGroup]="reservaForm" (ngSubmit)="confirmarReserva()" class="grid grid-cols-1 gap-5 max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-md">
+
+  <!-- Tipo de habitación -->
+  <div>
+    <label for="tipoHabitacion" class="block mb-1 font-semibold text-gray-700">Tipo de Habitación</label>
+    <select id="tipoHabitacion" formControlName="tipoHabitacionId"
+            (change)="cargarPrecios(); cargarHabitacionesDisponibles()"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option *ngFor="let tipo of tiposHabitacion" [value]="tipo.id">{{ tipo.nombre }}</option>
+    </select>
+  </div>
+
+  <!-- Habitación disponible -->
+  <div *ngIf="habitacionesDisponibles.length > 0">
+    <label for="habitacion" class="block mb-1 font-semibold text-gray-700">Habitación Disponible</label>
+    <select id="habitacion" formControlName="habitacionId"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option *ngFor="let habitacion of habitacionesDisponibles" [value]="habitacion.id">
+        #{{ habitacion.numero }} - {{ habitacion.estado }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Cantidad de huéspedes -->
+  <div>
+    <label for="cantidad" class="block mb-1 font-semibold text-gray-700">Cantidad de Huéspedes</label>
+    <input id="cantidad" type="number" min="1" max="4" formControlName="cantidadHuespedes"
+           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+  </div>
+
+  <!-- Fechas -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label for="fechaInicio" class="block mb-1 font-semibold text-gray-700">Fecha de Inicio</label>
+      <input id="fechaInicio" type="date" formControlName="fechaInicio"
+             class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+    <div>
+      <label for="fechaFin" class="block mb-1 font-semibold text-gray-700">Fecha de Fin</label>
+      <input id="fechaFin" type="date" formControlName="fechaFin"
+             class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+  </div>
+
+  <!-- Plan de Alojamiento -->
+  <div *ngIf="precioPlanes.length > 0">
+    <label class="block mb-1 font-semibold text-gray-700">Plan de Alojamiento</label>
+    <select formControlName="planSeleccionado" (change)="onSeleccionarPlan($event)"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option *ngFor="let plan of precioPlanes" [value]="plan.id">
+        {{ plan.planAlojamiento.nombre }} - S/ {{ plan.precio.toFixed(2) }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Botón de confirmación -->
+  <div class="mt-4 text-center ">
+    <button type="submit" [disabled]="reservaForm.invalid"
+            class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50">
+      Confirmar Reserva
+    </button>
+  </div>
+</form>
+</div>

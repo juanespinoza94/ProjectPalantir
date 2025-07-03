@@ -1,0 +1,122 @@
+<h2 class="text-2xl font-bold mb-4 text-blue-800">Listado de Ítems de Consumo</h2>
+
+<div class="flex justify-end gap-4 mb-6">
+  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" (click)="abrirModal('Producto')">Agregar Producto</button>
+  <button class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded" (click)="abrirModal('Servicio')">Agregar Servicio</button>
+</div>
+
+<!-- Tabla -->
+<div class="overflow-auto">
+  <table class="min-w-full bg-white border rounded shadow text-sm">
+    <thead class="bg-gray-100 text-gray-800 uppercase text-xs">
+      <tr>
+        <th class="px-4 py-2 border">#</th>
+        <th class="px-4 py-2 border">Nombre</th>
+        <th class="px-4 py-2 border">Descripción</th>
+        <th class="px-4 py-2 border">Tipo</th>
+        <th class="px-4 py-2 border">Precio</th>
+        <th class="px-4 py-2 border">Stock</th>
+        <th class="px-4 py-2 border">Estado</th>
+        <th class="px-4 py-2 border">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of listaItems; let i = index" class="text-gray-700">
+        <td class="px-4 py-2 border">{{ i + 1 }}</td>
+        <td class="px-4 py-2 border">{{ item.nombre }}</td>
+        <td class="px-4 py-2 border">{{ item.descripcion }}</td>
+        <td class="px-4 py-2 border">{{ item.tipo }}</td>
+        <td class="px-4 py-2 border">S/ {{ item.precioVenta }}</td>
+        <td class="px-4 py-2 border">{{ item.tipo === 'Producto' ? (item.tieneStock ? 'Sí' : 'No') : 'N/A' }}</td>
+        <td class="px-4 py-2 border">{{ item.estado }}</td>
+        <td class="px-4 py-2 border space-x-2">
+          <button class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded" (click)="abrirModal(item.tipo, item.id)">Editar</button>
+          <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded" (click)="eliminarItem(item.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal Tailwind -->
+<div *ngIf="modalVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-lg relative">
+    <h2 class="text-xl font-bold mb-4">{{ encabezado }}</h2>
+
+    <form [formGroup]="formItem" class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block mb-1 font-medium">Nombre</label>
+          <input type="text" formControlName="nombre"
+            class="w-full border p-2 rounded-md focus:ring focus:ring-blue-400"
+            [ngClass]="{ 'border-red-500': formItem.get('nombre')?.invalid && formItem.get('nombre')?.touched }" />
+          <p class="text-sm text-red-500 mt-1" *ngIf="formItem.get('nombre')?.errors?.['pattern']">
+            Solo se permiten letras.
+          </p>
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Precio Venta</label>
+          <input type="number" formControlName="precioVenta"
+            class="w-full border p-2 rounded-md focus:ring focus:ring-blue-400"
+            [ngClass]="{ 'border-red-500': formItem.get('precioVenta')?.invalid && formItem.get('precioVenta')?.touched }" />
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block mb-1 font-medium">Descripción</label>
+          <textarea formControlName="descripcion"
+            class="w-full border p-2 rounded-md focus:ring focus:ring-blue-400"
+            rows="3"
+            [ngClass]="{ 'border-red-500': formItem.get('descripcion')?.invalid && formItem.get('descripcion')?.touched }"></textarea>
+          <p class="text-sm text-red-500 mt-1" *ngIf="formItem.get('descripcion')?.errors?.['pattern']">
+            Solo se permiten letras.
+          </p>
+        </div>
+
+        <!-- Tiene Stock (solo productos y si es edición) -->
+        <div *ngIf="modo === 'Producto' && id">
+          <label class="block mb-1 font-medium">Tiene Stock</label>
+          <select formControlName="tieneStock"
+            class="w-full border p-2 rounded-md focus:ring focus:ring-blue-400">
+            <option [value]="true">Sí</option>
+            <option [value]="false">No</option>
+          </select>
+        </div>
+
+        <!-- Estado (solo si es edición) -->
+        <div *ngIf="id">
+          <label class="block mb-1 font-medium">Estado</label>
+          <select formControlName="estado"
+            class="w-full border p-2 rounded-md focus:ring focus:ring-blue-400">
+            <option value="Disponible">Disponible</option>
+            <option value="No Disponible">No Disponible</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-4 mt-6">
+        <button type="button" (click)="cerrarModal()"
+          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg">
+          Cancelar
+        </button>
+
+        <button *ngIf="!id" type="button" (click)="registrarItem()" [disabled]="formItem.invalid"
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+          Registrar
+        </button>
+
+        <button *ngIf="id" type="button" (click)="alertaActualizar()" [disabled]="formItem.invalid"
+          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">
+          Actualizar
+        </button>
+      </div>
+    </form>
+
+    <!-- Botón de cerrar (X) -->
+    <button (click)="cerrarModal()"
+      class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl leading-none">
+      &times;
+    </button>
+  </div>
+</div>

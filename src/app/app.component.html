@@ -1,4 +1,13 @@
+<!-- app.component.html -->
+<div class="flex flex-col min-h-screen">
+  <!-- NAVBAR -->
+  <app-navbar></app-navbar>
 
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="flex-1">
+    <router-outlet></router-outlet>
+  </main>
 
-
-<router-outlet></router-outlet>
+  <!-- FOOTER -->
+  <app-footer></app-footer>
+</div>
